@@ -13,7 +13,6 @@ module ElChat
       if existing = find(peer)
         existing.update(peer)
       else
-        puts "New peer: #{peer.ip}:#{peer.port}"
         peers << peer
       end
 

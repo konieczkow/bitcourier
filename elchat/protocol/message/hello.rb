@@ -1,7 +1,7 @@
 module ElChat
   module Protocol
     module Message
-      class Version < Base
+      class Hello < Base
         ID              = 0x1
         DEFAULT_VERSION = 1
 
