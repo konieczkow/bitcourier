@@ -1,6 +1,6 @@
 module ElChat
   class Node
-    
+
     class State
       class Unimplemented < StandardError; end
 
@@ -66,7 +66,7 @@ module ElChat
         node.remember_peer
         node.send_message(Protocol::Message::GetPeerList.new)
       end
-      
+
       def on_get_peer_list msg
         node.send_peer_list
       end
@@ -82,7 +82,7 @@ module ElChat
       self.socket = socket
       self.context = context
     end
-    
+
     def set_state state
       self.state.on_leave if self.state
       self.state = state.new(self)
@@ -94,8 +94,9 @@ module ElChat
     end
 
     def remember_peer
-      ip = socket.addr[3]
-      peer = Peer.new ip, remote_port
+      remote_ip = socket.peeraddr[3]
+      peer      = Peer.new remote_ip, remote_port
+
       context.peer_list.store peer
     end
 
@@ -136,7 +137,7 @@ module ElChat
         when Protocol::Message::PeerInfo
           state.on_peer_info(msg)
         else
-          puts "Don't know how to handle message class #{msg.class}" 
+          puts "Don't know how to handle message class #{msg.class}"
       end
     end
 
