@@ -16,6 +16,9 @@ module ElChat
           header + payload
         end
 
+        def extract data
+        end
+
         def self.unpack data
           magic, id, len = unpack_header(data)
 
@@ -47,7 +50,7 @@ module ElChat
         end
 
         def self.find_message_class id
-          [Version].each do |msg|
+          [Version, GetPeerList].each do |msg|
             return msg if msg::ID == id
           end
 
