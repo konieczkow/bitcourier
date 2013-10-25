@@ -29,18 +29,20 @@ module ElChat
 
       def next_peer_connection
         if peer = @context.peer_list.next
-          puts "Connecting to peer #{peer[0]} on port #{peer[1]}"
+          puts "Connecting to peer #{peer.ip} on port #{peer.port}"
 
-          socket = TCPSocket.new(peer[0], peer[1])
+          socket = TCPSocket.new(peer.ip, peer.port)
 
-          @context.peer_list.store(peer[0], peer[1], Time.now, nil)
+          peer.touch
+          @context.peer_list.store(peer)
 
           socket
         end
       rescue Errno::ECONNREFUSED
         puts 'Connection refused'
 
-        @context.peer_list.store(peer[0], peer[1], peer[2], Time.now + PEER_CONNECTION_RETRY_DELAY)
+        peer.next_connection_at = Time.now + PEER_CONNECTION_RETRY_DELAY
+        @context.peer_list.store(peer)
 
         nil
       end

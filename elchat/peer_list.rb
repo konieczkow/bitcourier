@@ -3,8 +3,9 @@ module ElChat
     attr_reader :peers
 
     def initialize
-      self.peers = []
+      @peers   = []
       @storage = Storage.new(self)
+
       load
     end
 
@@ -19,25 +20,23 @@ module ElChat
     end
 
     def next
-      peers.select { |peer| peer.can_connect? }.sample
+      peers.select(&:can_connect?).sample
     end
 
     private
 
-    attr_writer :peers
+    attr_reader :storage
 
     def find(peer)
-      peers.detect do |i|
-        (peer.ip == i.ip) and (peer.port == i.port)
-      end
+      peers.detect { |existing| existing.same?(peer) }
     end
 
     def save
-      @storage.write
+      storage.write
     end
 
     def load
-      @storage.read
+      storage.read
 
       seed if peers.size == 0
     end
