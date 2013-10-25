@@ -8,8 +8,15 @@ module ElChat
           [MAGIC_BYTES, self.class::ID, payload.size].pack('SSS')
         end
 
+        def payload
+          ""
+        end
+
         def pack
           header + payload
+        end
+
+        def extract data
         end
 
         def self.unpack data
@@ -20,7 +27,10 @@ module ElChat
 
           klass = find_message_class(id)
 
-          klass.unpack data[6..-1]
+          msg = klass.new
+          msg.extract data[6..-1]
+
+          return msg
         end
 
         def self.message_size data
@@ -40,7 +50,7 @@ module ElChat
         end
 
         def self.find_message_class id
-          [Version].each do |msg|
+          [Version, GetPeerList].each do |msg|
             return msg if msg::ID == id
           end
 

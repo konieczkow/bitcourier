@@ -10,8 +10,14 @@ module ElChat
         self.node = node
       end
 
-      def on_version
-        raise Unimplemented
+      def method_missing method, args
+        name = method.id2name
+
+        if name.start_with? 'on_'
+          puts "Can't handle #{name[3..-1]} in current state"
+        else
+          super(method, args)
+        end
       end
 
       def set_state state
@@ -48,7 +54,10 @@ module ElChat
 
     class ReadyState < State
       def on_enter
-        puts 'ReadyState#on_enter'
+        node.send_message(Protocol::Message::GetPeerList.new)
+      end
+      
+      def on_get_peer_list msg
       end
     end
 
@@ -72,8 +81,13 @@ module ElChat
     def on_message msg
       return if state.nil?
 
-      if msg.is_a? Protocol::Message::Version
-        state.on_version msg
+      case msg
+        when Protocol::Message::Version
+          state.on_version(msg)
+        when Protocol::Message::GetPeerList
+          state.on_get_peer_list(msg)
+        else
+          puts "Don't know how to handle message class #{msg.class}" 
       end
     end
 
