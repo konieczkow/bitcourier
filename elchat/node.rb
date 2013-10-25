@@ -33,7 +33,7 @@ module ElChat
 
     class ActiveHandshake < State
       def on_enter
-        node.send_message(Protocol::Message::Version.new)
+        node.send_version
       end
 
       def on_version msg
@@ -46,7 +46,7 @@ module ElChat
     class PassiveHandshake < State
       def on_version msg
         if msg.version == Protocol::Message::Version::DEFAULT_VERSION
-          node.send_message(Protocol::Message::Version.new)
+          node.send_version
           set_state ReadyState
         end
       end
@@ -77,6 +77,13 @@ module ElChat
       self.state.on_leave if self.state
       self.state = state.new(self)
       self.state.on_enter
+    end
+
+    def send_version
+      msg = Protocol::Message::Version.new
+      msg.port = context.server.port
+      msg.nonce = context.nonce
+      send_message msg
     end
 
     def send_peer_list

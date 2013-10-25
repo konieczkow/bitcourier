@@ -1,13 +1,16 @@
+require 'securerandom'
+
 module ElChat
 
   class Daemon
-    attr_accessor :server, :client, :node_manager, :peer_list
+    attr_accessor :server, :client, :node_manager, :peer_list, :nonce
 
     def initialize
       self.server       = Network::Server.new self
       self.node_manager = NodeManager.new self
       self.client       = Network::Client.new self
       self.peer_list    = PeerList.new
+      self.nonce        = SecureRandom.random_number(2**64)
     end
 
     def start

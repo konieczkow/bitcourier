@@ -23,6 +23,10 @@ module ElChat
           end
         end
       end
+
+      def ip_string
+
+      end
     end
   end
 end

@@ -12,7 +12,7 @@ module ElChat
         end
 
         def payload
-          [version, port, nonce].pack('SSQ')
+          [version.to_i, port.to_i, nonce.to_i].pack('SSQ')
         end
 
         def extract data

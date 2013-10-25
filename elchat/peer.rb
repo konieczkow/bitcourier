@@ -10,7 +10,7 @@ module ElChat
     end
 
     def touch(timestamp = Time.now)
-      self.last_seen_at = [last_seen_at || Time.at(0), timestamp].max
+      self.last_seen_at = [last_seen_at || Time.at(0), timestamp || Time.now].max
     end
 
     def update(peer)
