@@ -1,83 +1,70 @@
 module ElChat
-
   class PeerList
-    attr_accessor :list
+    attr_accessor :peers
 
     def initialize
-      @storage = Storage.new
-      @list    = @storage.read
+      self.peers = []
+      @storage = Storage.new(self)
+      load
     end
 
-    def store_peers(peer_array = [])
-      peer_array.each do |peer|
-        self.store(peer.ip, peer.port, peer.last_seen_at)
-      end
-    end
-
-    def store(ip, port, last_seen_at, next_connection_at)
-      if peer = get(ip, port)
-        peer[2] = last_seen_at if peer[2].nil? || peer[2] < last_seen_at
-        peer[3] = next_connection_at
+    def store(peer)
+      if existing = find(peer)
+        existing.update(peer)
       else
-        list << [ip, port, last_seen_at, next_connection_at]
+        peers << peer
       end
 
-      @storage.write(list)
+      save
     end
 
     def next
-      list.reject{|peer| peer[3] && peer[3] > Time.now}.sample
+      peers.select { |p| p.can_connect? }.sample
     end
 
-    def get(ip, port)
-      list.detect { |peer| peer[0] == ip && peer[1] == port }
+    def find(peer)
+      peers.detect do |i|
+        (peer.ip == i.ip) and (peer.port == i.port)
+      end
+    end
+
+    def save
+      @storage.write
+    end
+
+    def load
+      @storage.read
+      seed if peers.size == 0
+    end
+
+    def seed
+      store Peer.new('127.0.0.1', 6081)
+      store Peer.new('127.0.0.1', 6082)
     end
 
     class Storage
+      PATH = "./tmp/peer_list.txt"
+      
+      def initialize list
+        @list = list
+      end
+
       def read
-        peers = []
-
-        File.read('./tmp/peer_list.txt').each_line do |line|
-          peer_data = line.split('|')
-          peer_data[2] = Time.at(peer_data[2].to_i) if peer_data[2]
-          peer_data[3] = Time.at(peer_data[3].to_i) if peer_data[3]
+        File.read(PATH).lines.map do |line|
+          @list.store Peer.from_a(line.split('|'))
         end
-
-        if peers.size.zero?
-          peers = add_known_peers
-        end
-
-        peers
+      rescue Errno::ENOENT
+        return []
       end
 
-      def write(list)
-        file = File.open('./tmp/peer_list.txt', 'w+')
-
-        file.truncate(file.size)
-
-        list.each do |peer|
-          ip = peer[0]
-          port = peer[1]
-          last_seen_at = peer[2] ? peer[2].to_i : nil
-          next_connection_at = peer[3] ? peer[3].to_i : nil
-          
-          file.write("#{ip}|#{port}|#{last_seen_at}|#{next_connection_at}")
+      def write
+        file = File.open(PATH, 'w') do |file|
+          @list.peers.each do |p|
+            file.write p.to_a.join('|')
+            file.write "\n"
+          end
         end
-
-        file.close
-
-        'Peer list has been saved.'
-      end
-
-      def add_known_peers
-        list = [
-          ['127.0.0.1', '6081', Time.now]
-        ]
-        write(list)
-
-        list
       end
     end
-
   end
 end
