@@ -50,7 +50,7 @@ module ElChat
         end
 
         def self.find_message_class id
-          [Version, GetPeerList].each do |msg|
+          [Version, GetPeerList, PeerInfo].each do |msg|
             return msg if msg::ID == id
           end
 
