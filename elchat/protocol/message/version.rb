@@ -15,12 +15,8 @@ module ElChat
           [version].pack('S')
         end
 
-        def self.unpack data
-          msg = new
-
-          msg.version = data.unpack('S').first
-
-          return msg
+        def extract data
+          self.version = data.unpack('S').first
         end
       end
     end
