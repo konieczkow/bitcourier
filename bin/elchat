@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+require 'thor'
+require_relative '../elchat'
+
+class ElChatCli < Thor
+
+  desc 'node', 'Start ElChat node'
+  method_option :port, default: 6081, aliases: '-p', desc: 'port on which the ElChat node will listen'
+  def node
+    daemon = ElChat::Daemon.new
+    daemon.run(options.port)
+  end
+
+end
+
+ElChatCli.start

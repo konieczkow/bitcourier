@@ -1,6 +1,6 @@
 module ElChat
   class PeerList
-    attr_accessor :peers
+    attr_reader :peers
 
     def initialize
       self.peers = []
@@ -19,8 +19,12 @@ module ElChat
     end
 
     def next
-      peers.select { |p| p.can_connect? }.sample
+      peers.select { |peer| peer.can_connect? }.sample
     end
+
+    private
+
+    attr_writer :peers
 
     def find(peer)
       peers.detect do |i|
@@ -34,6 +38,7 @@ module ElChat
 
     def load
       @storage.read
+
       seed if peers.size == 0
     end
 
@@ -43,7 +48,7 @@ module ElChat
     end
 
     class Storage
-      PATH = "./tmp/peer_list.txt"
+      PATH = './tmp/peer_list.txt'
       
       def initialize list
         @list = list
@@ -58,10 +63,9 @@ module ElChat
       end
 
       def write
-        file = File.open(PATH, 'w') do |file|
-          @list.peers.each do |p|
-            file.write p.to_a.join('|')
-            file.write "\n"
+        File.open(PATH, 'w') do |file|
+          @list.peers.each do |peer|
+            file.puts peer.to_a.join('|')
           end
         end
       end

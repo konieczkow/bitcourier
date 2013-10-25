@@ -18,9 +18,8 @@ module ElChat
       client_thread.join
     end
 
-    def run args
-      server.port  = args[0]
-      $client_port = args[1]
+    def run(port)
+      server.port = port
 
       start
     end
