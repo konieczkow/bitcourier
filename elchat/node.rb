@@ -39,15 +39,22 @@ module ElChat
       def on_version msg
         if msg.version == Protocol::Message::Version::DEFAULT_VERSION
           set_state ReadyState
+        else
+          node.disconnect
         end
       end
     end
 
     class PassiveHandshake < State
       def on_version msg
-        if msg.version == Protocol::Message::Version::DEFAULT_VERSION
+        version_ok = msg.version == Protocol::Message::Version::DEFAULT_VERSION
+        nonce_ok = msg.nonce != node.context.nonce
+
+        if version_ok and nonce_ok
           node.send_version
           set_state ReadyState
+        else
+          node.disconnect
         end
       end
     end
@@ -77,6 +84,10 @@ module ElChat
       self.state.on_leave if self.state
       self.state = state.new(self)
       self.state.on_enter
+    end
+
+    def disconnect
+      socket.close
     end
 
     def send_version
@@ -125,18 +136,22 @@ module ElChat
       @thread = Thread.new do
         buffer = ''
 
-        loop do
-          data = socket.recv(1024)
+        begin
+          loop do
+            data = socket.recv(1024)
 
-          break if data.length == 0
+            break if data.length == 0
 
-          buffer += data
+            buffer += data
 
-          while (message_size = Protocol::Message::Base.message_size(buffer)) > 0
-            message_data = buffer.slice!(0, message_size)
-            message = Protocol::Message::Base.unpack(message_data)
-            on_message message
+            while (message_size = Protocol::Message::Base.message_size(buffer)) > 0
+              message_data = buffer.slice!(0, message_size)
+              message = Protocol::Message::Base.unpack(message_data)
+              on_message message
+            end
           end
+        rescue IOError
+          puts "Connection closed"
         end
 
       end
