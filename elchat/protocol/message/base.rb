@@ -34,11 +34,11 @@ module ElChat
         end
 
         def self.message_size data
-          return false if data.size < 6
+          return 0 if data.size < 6
 
           magic, id, len = unpack_header(data)
 
-          return false if data.size < (len + 6)
+          return 0 if data.size < (len + 6)
 
           return len + 6
         end

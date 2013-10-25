@@ -125,13 +125,9 @@ module ElChat
 
           buffer += data
 
-          message_size = Protocol::Message::Base.message_size(buffer)
-
-          if message_size
+          while (message_size = Protocol::Message::Base.message_size(buffer)) > 0
             message_data = buffer.slice!(0, message_size)
-
             message = Protocol::Message::Base.unpack(message_data)
-
             on_message message
           end
         end
