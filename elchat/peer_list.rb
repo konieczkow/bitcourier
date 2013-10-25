@@ -1,11 +1,11 @@
-module Elchat
-  class PeerList
+module ElChat
 
+  class PeerList
     attr_accessor :list
 
     def initialize
       @storage = Storage.new
-      @list = @storage.read
+      @list    = @storage.read
     end
 
     def store_peers(peer_array = [])
@@ -16,16 +16,16 @@ module Elchat
 
     def store(ip, port, last_seen_at)
       (list << [ip, port, last_seen_at]) if last_seen_validity(last_seen_at) && not_on_the_list(ip, port)
-      return list
+
+      list
     end
 
     def save
       @storage.write(list)
     end
 
-    #TODO: what to do? =]
     def next
-      return false
+      list.sample
     end
 
     def on_the_list(ip, port)
@@ -35,7 +35,7 @@ module Elchat
         peer_on_list = true if (peer.include?(ip) && peer.include?(port))
       end
 
-      return peer_on_list
+      peer_on_list
     end
 
     def not_on_the_list(ip, port)
@@ -48,7 +48,12 @@ module Elchat
 
     class Storage
       def read
-        File.read('./tmp/peer_list.txt').split(',').map{|peer| peer.split('|')}
+        file = File.read('./tmp/peer_list.txt').split(',').map{|peer| peer.split('|')}
+        if file.size.zero?
+          file = add_known_peers
+        end
+
+        file
       end
 
       def write(list)
@@ -62,8 +67,18 @@ module Elchat
 
         file.close
 
-        return 'Peer list has been saved.'
+        'Peer list has been saved.'
+      end
+
+      def add_known_peers
+        list = [
+          ['127.0.0.1', '6081', Time.now]
+        ]
+        write(list)
+
+        list
       end
     end
+
   end
 end
