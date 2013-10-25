@@ -43,8 +43,7 @@ module ElChat
     end
 
     def seed
-      store Peer.new('127.0.0.1', 6081)
-      store Peer.new('127.0.0.1', 6082)
+      store Peer.new('146.185.167.10', 6081)
     end
 
     class Storage
