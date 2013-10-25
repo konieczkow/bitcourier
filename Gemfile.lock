@@ -1,4 +1,5 @@
 GEM
+  remote: https://rubygems.org/
   specs:
     thor (0.18.1)
 
