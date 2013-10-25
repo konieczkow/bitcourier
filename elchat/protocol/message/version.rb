@@ -5,18 +5,21 @@ module ElChat
         ID              = 0x1
         DEFAULT_VERSION = 1
 
-        attr_accessor :version
+        attr_accessor :version, :port, :nonce
 
         def initialize
           self.version = DEFAULT_VERSION
         end
 
         def payload
-          [version].pack('S')
+          [version, port, nonce].pack('SSQ')
         end
 
         def extract data
-          self.version = data.unpack('S').first
+          a = data.unpack('SSQ')
+          self.version = a[0]
+          self.port = a[1]
+          self.nonce = a[2]
         end
       end
     end
