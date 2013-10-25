@@ -7,6 +7,3 @@ require_relative 'elchat/peer_list'
 
 module ElChat
 end
-
-daemon = ElChat::Daemon.new
-daemon.run ARGV
