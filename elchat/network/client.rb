@@ -40,6 +40,8 @@ module ElChat
       rescue Errno::ECONNREFUSED
         puts "Connection refused"
 
+        @context.peer_list.store(peer[0], peer[1], peer[2], Time.now + 60 * 10)
+
         nil
       end
 

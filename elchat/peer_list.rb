@@ -14,46 +14,40 @@ module ElChat
       end
     end
 
-    def store(ip, port, last_seen_at)
-      (list << [ip, port, last_seen_at]) if last_seen_validity(last_seen_at) && not_on_the_list(ip, port)
+    def store(ip, port, last_seen_at, next_connection_at)
+      if peer = get(ip, port)
+        peer[2] = last_seen_at if peer[2].nil? || peer[2] < last_seen_at
+        peer[3] = next_connection_at
+      else
+        list << [ip, port, last_seen_at, next_connection_at]
+      end
 
-      list
-    end
-
-    def save
       @storage.write(list)
     end
 
     def next
-      list.sample
+      list.reject{|peer| peer[3] && peer[3] > Time.now}.sample
     end
 
-    def on_the_list(ip, port)
-      peer_on_list = false
-
-      list.each do |peer|
-        peer_on_list = true if (peer.include?(ip) && peer.include?(port))
-      end
-
-      peer_on_list
-    end
-
-    def not_on_the_list(ip, port)
-      !on_the_list(ip, port)
-    end
-
-    def last_seen_validity(last_seen_at)
-      (Time.now - last_seen_at) < 7776000
+    def get(ip, port)
+      list.detect { |peer| peer[0] == ip && peer[1] == port }
     end
 
     class Storage
       def read
-        file = File.read('./tmp/peer_list.txt').split(',').map{|peer| peer.split('|')}
-        if file.size.zero?
-          file = add_known_peers
+        peers = []
+
+        File.read('./tmp/peer_list.txt').each_line do |line|
+          peer_data = line.split('|')
+          peer_data[2] = Time.at(peer_data[2]) if peer_data[2]
+          peer_data[3] = Time.at(peer_data[3]) if peer_data[3]
         end
 
-        file
+        if peers.size.zero?
+          peers = add_known_peers
+        end
+
+        peers
       end
 
       def write(list)
@@ -62,7 +56,12 @@ module ElChat
         file.truncate(file.size)
 
         list.each do |peer|
-          file.write("#{peer[0]}|#{peer[1]}|#{peer[2]},")
+          ip = peer[0]
+          port = peer[1]
+          last_seen_at = peer[2] ? peer[2].to_i : nil
+          next_connection_at = peer[3] ? peer[3].to_i : nil
+          
+          file.write("#{ip}|#{port}|#{last_seen_at}|#{next_connection_at}")
         end
 
         file.close
