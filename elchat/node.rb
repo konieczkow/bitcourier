@@ -37,7 +37,7 @@ module ElChat
       end
 
       def on_hello msg
-        if msg.version == Protocol::Message::Hello::DEFAULT_VERSION
+        if msg.protocol_version == Protocol::Message::Hello::PROTOCOL_VERSION
           node.remote_port = msg.port
           set_state ReadyState
         else
@@ -48,7 +48,7 @@ module ElChat
 
     class PassiveHandshake < State
       def on_hello msg
-        version_ok = msg.version == Protocol::Message::Hello::DEFAULT_VERSION
+        version_ok = msg.protocol_version == Protocol::Message::Hello::PROTOCOL_VERSION
         nonce_ok = msg.nonce != node.context.nonce
 
         if version_ok and nonce_ok
