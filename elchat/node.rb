@@ -58,13 +58,19 @@ module ElChat
       end
       
       def on_get_peer_list msg
+        node.send_peer_list
+      end
+
+      def on_peer_info msg
+        node.on_peer_info(msg)
       end
     end
 
-    attr_accessor :socket
+    attr_accessor :socket, :context
 
-    def initialize(socket)
+    def initialize(context, socket)
       self.socket = socket
+      self.context = context
     end
     
     def set_state state
@@ -73,9 +79,24 @@ module ElChat
       self.state.on_enter
     end
 
+    def send_peer_list
+      context.peer_list.peers.each do |peer|
+        msg = Protocol::Message::PeerInfo.new
+        msg.ip = peer.ip
+        msg.port = peer.port
+        msg.last_seen_at = peer.last_seen_at
+        send_message msg
+      end
+    end
+
     def send_message msg
       data = msg.pack
       socket.write data
+    end
+
+    def on_peer_info msg
+      context.peer_list.store Peer.new(msg.ip, msg.port, msg.last_seen_at)
+      puts "Peer: #{msg.ip}:#{msg.port}"
     end
 
     def on_message msg
@@ -86,6 +107,8 @@ module ElChat
           state.on_version(msg)
         when Protocol::Message::GetPeerList
           state.on_get_peer_list(msg)
+        when Protocol::Message::PeerInfo
+          state.on_peer_info(msg)
         else
           puts "Don't know how to handle message class #{msg.class}" 
       end

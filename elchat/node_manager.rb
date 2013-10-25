@@ -12,7 +12,7 @@ module ElChat
     end
 
     def add_socket socket, active = false
-      node = Node.new socket
+      node = Node.new context, socket
 
       if active
         node.set_state Node::ActiveHandshake
