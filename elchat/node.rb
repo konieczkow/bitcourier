@@ -38,6 +38,7 @@ module ElChat
 
       def on_version msg
         if msg.version == Protocol::Message::Version::DEFAULT_VERSION
+          node.remote_port = msg.port
           set_state ReadyState
         else
           node.disconnect
@@ -51,6 +52,7 @@ module ElChat
         nonce_ok = msg.nonce != node.context.nonce
 
         if version_ok and nonce_ok
+          node.remote_port = msg.port
           node.send_version
           set_state ReadyState
         else
@@ -61,6 +63,7 @@ module ElChat
 
     class ReadyState < State
       def on_enter
+        node.remember_peer
         node.send_message(Protocol::Message::GetPeerList.new)
       end
       
@@ -73,7 +76,7 @@ module ElChat
       end
     end
 
-    attr_accessor :socket, :context
+    attr_accessor :socket, :context, :remote_port
 
     def initialize(context, socket)
       self.socket = socket
@@ -88,6 +91,12 @@ module ElChat
 
     def disconnect
       socket.close
+    end
+
+    def remember_peer
+      ip = socket.addr[3]
+      peer = Peer.new ip, remote_port
+      context.peer_list.store peer
     end
 
     def send_version
@@ -114,7 +123,6 @@ module ElChat
 
     def on_peer_info msg
       context.peer_list.store Peer.new(msg.ip, msg.port, msg.last_seen_at)
-      puts "Peer: #{msg.ip}:#{msg.port}"
     end
 
     def on_message msg
