@@ -39,8 +39,8 @@ module ElChat
 
         File.read('./tmp/peer_list.txt').each_line do |line|
           peer_data = line.split('|')
-          peer_data[2] = Time.at(peer_data[2]) if peer_data[2]
-          peer_data[3] = Time.at(peer_data[3]) if peer_data[3]
+          peer_data[2] = Time.at(peer_data[2].to_i) if peer_data[2]
+          peer_data[3] = Time.at(peer_data[3].to_i) if peer_data[3]
         end
 
         if peers.size.zero?
