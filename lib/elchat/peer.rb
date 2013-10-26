@@ -22,6 +22,10 @@ module Elchat
       next_connection_at < time
     end
 
+    def retry_in delay
+      self.next_connection_at = Time.now + delay
+    end
+
     def to_a
       [
           ip,

@@ -1,9 +1,11 @@
+require 'timeout'
+
 module Elchat
   module Network
-
     class Client
       PEER_CONNECTION_RETRY_DELAY = 5 # In seconds
       NEXT_PEER_DELAY             = 5
+      CONNECT_TIMEOUT             = 5
 
       def initialize context
         @context = context
@@ -28,35 +30,36 @@ module Elchat
       private
 
       def next_peer_connection
-        if peer = @context.peer_list.next
-          puts "Connecting to peer #{peer.ip} on port #{peer.port}"
+        socket = nil
 
-          socket = TCPSocket.new(peer.ip, peer.port)
+        if peer = @context.peer_list.next
+          print "Connecting to #{peer.ip}:#{peer.port}... "
+
+          timeout(CONNECT_TIMEOUT) do
+            socket = TCPSocket.new(peer.ip, peer.port)
+          end
+
+          print "Connected.\n"
 
           peer.touch
           @context.peer_list.store(peer)
-
-          socket
         end
       rescue Errno::ECONNREFUSED
-        puts 'Connection refused'
+        print "Connection refused.\n"
 
-        peer.next_connection_at = Time.now + PEER_CONNECTION_RETRY_DELAY
+        peer.retry_in PEER_CONNECTION_RETRY_DELAY
         @context.peer_list.store(peer)
+      rescue Errno::ETIMEDOUT, Timeout::Error
+        print "Timed out.\n"
 
-        nil
-      rescue Errno::ETIMEDOUT
-        puts 'Connection timed out'
-
-        peer.next_connection_at = Time.now + PEER_CONNECTION_RETRY_DELAY
+        peer.retry_in PEER_CONNECTION_RETRY_DELAY
         @context.peer_list.store(peer)
-
       rescue Exception => e
-        puts "Unhandled exception #{e.class}: #{e}"
+        print "#{e.class}: #{e}\n"
         puts e.backtrace
+      ensure
+        return socket
       end
-      
     end
-
   end
 end
