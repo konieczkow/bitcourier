@@ -16,7 +16,7 @@ module Elchat
 
           self.ip           = data[0..3].join('.')
           self.port         = data[4].to_i
-          self.last_seen_at = Time.at(data[5].to_i)
+          self.last_seen_at = Time.at(data[5].to_i).utc
 
           self
         end
