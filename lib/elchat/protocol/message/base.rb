@@ -25,13 +25,12 @@ module Elchat
 
           return nil if magic != MAGIC_BYTES # wrong magic
           return nil if length + HEADER_SIZE > bytes.size # partial package
+          return nil unless klass = find_message_class(id)
 
-          if klass = find_message_class(id)
-            msg = klass.new
-            msg.extract bytes[HEADER_SIZE..-1]
+          msg = klass.new
+          msg.extract bytes[HEADER_SIZE..-1]
 
-            msg
-          end
+          msg
         end
 
         def self.message_size bytes
