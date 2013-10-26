@@ -1,6 +1,7 @@
 # Elchat
 
 [![Build Status](https://travis-ci.org/elpassion/elchat.png)](https://travis-ci.org/elpassion/elchat)
+[![Dependency Status](https://gemnasium.com/elpassion/elchat.png)](https://gemnasium.com/elpassion/elchat)
 
 Decentralized and trustless communication protocol used to anonymously send encrypted messages via peer-to-peer network.
 
