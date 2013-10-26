@@ -45,6 +45,15 @@ module Elchat
         @context.peer_list.store(peer)
 
         nil
+      rescue Errno::ETIMEDOUT
+        puts 'Connection timed out'
+
+        peer.next_connection_at = Time.now + PEER_CONNECTION_RETRY_DELAY
+        @context.peer_list.store(peer)
+
+      rescue Exception => e
+        puts "Unhandled exception #{e.class}: #{e}"
+        puts e.backtrace
       end
       
     end
