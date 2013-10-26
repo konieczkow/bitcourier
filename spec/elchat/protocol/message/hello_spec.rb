@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Elchat::Protocol::Message::Hello do
   before do
     @hello       = Elchat::Protocol::Message::Hello.new
-    @hello_bytes = "{\x00\x11\x00\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
+    @hello_bytes = "{\x00\x11\x00\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF".force_encoding(Encoding::BINARY)
   end
 
   it 'initiates with default version number' do
