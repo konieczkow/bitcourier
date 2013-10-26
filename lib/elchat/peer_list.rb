@@ -1,4 +1,4 @@
-module ElChat
+module Elchat
   class PeerList
     attr_reader :peers
 

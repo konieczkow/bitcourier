@@ -1,4 +1,4 @@
-module ElChat
+module Elchat
   module Protocol
     module Message
 

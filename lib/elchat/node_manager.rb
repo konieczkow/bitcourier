@@ -1,4 +1,4 @@
-module ElChat
+module Elchat
   class NodeManager
     attr_accessor :context
 

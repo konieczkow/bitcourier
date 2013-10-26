@@ -1,0 +1,1 @@
+require 'elchat/protocol/message'

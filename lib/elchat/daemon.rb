@@ -1,6 +1,6 @@
 require 'securerandom'
 
-module ElChat
+module Elchat
 
   class Daemon
     attr_accessor :server, :client, :node_manager, :peer_list, :nonce

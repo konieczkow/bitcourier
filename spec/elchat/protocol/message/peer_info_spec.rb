@@ -1,8 +1,8 @@
 require_relative '../../../spec_helper'
 
-describe ElChat::Protocol::Message::PeerInfo do
+describe Elchat::Protocol::Message::PeerInfo do
   before do
-    @peer_info       = ElChat::Protocol::Message::PeerInfo.new
+    @peer_info       = Elchat::Protocol::Message::PeerInfo.new
     @peer_info_bytes = "\x01\x02\x03\x04\xFF\xFF\xAF5\xA24"
   end
 

@@ -1,13 +1,13 @@
 require_relative '../../../spec_helper'
 
-describe ElChat::Protocol::Message::Hello do
+describe Elchat::Protocol::Message::Hello do
   before do
-    @hello       = ElChat::Protocol::Message::Hello.new
+    @hello       = Elchat::Protocol::Message::Hello.new
     @hello_bytes = "{\x00\x11\x00\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
   end
 
   it 'initiates with default version number' do
-    @hello.protocol_version.must_equal ElChat::Protocol::Message::Hello::PROTOCOL_VERSION
+    @hello.protocol_version.must_equal Elchat::Protocol::Message::Hello::PROTOCOL_VERSION
   end
 
   describe '#payload' do

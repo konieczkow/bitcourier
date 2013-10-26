@@ -1,4 +1,4 @@
-module ElChat
+module Elchat
   class Peer
     attr_accessor :ip, :port, :last_seen_at, :next_connection_at
 
