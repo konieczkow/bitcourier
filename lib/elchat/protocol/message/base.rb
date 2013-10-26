@@ -36,7 +36,7 @@ module Elchat
         def self.message_size bytes
           return 0 if bytes.size < HEADER_SIZE
 
-          magic, id, length = unpack_header(bytes)
+          _, _, length = unpack_header(bytes)
 
           return 0 if bytes.size < (length + HEADER_SIZE)
 
