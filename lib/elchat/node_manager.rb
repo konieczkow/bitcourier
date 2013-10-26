@@ -1,5 +1,7 @@
 module Elchat
   class NodeManager
+    MINIMUM_NODES = 3
+
     attr_accessor :context
 
     def initialize context
@@ -8,7 +10,7 @@ module Elchat
     end
 
     def needs_nodes?
-      nodes.count < 1
+      nodes.count < MINIMUM_NODES
     end
 
     def add_socket socket, active = false
