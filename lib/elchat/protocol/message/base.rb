@@ -3,58 +3,59 @@ module Elchat
     module Message
       class Base
         MAGIC_BYTES = 0x1234
+        HEADER_SIZE = 6
 
         def header
           [MAGIC_BYTES, self.class::ID, payload.size].pack('SSS')
         end
 
         def payload
-          ""
+          ''
         end
 
         def pack
           header + payload
         end
 
-        def extract data
+        def extract bytes
         end
 
-        def self.unpack data
-          magic, id, len = unpack_header(data)
+        def self.unpack bytes
+          magic, id, length = unpack_header(bytes)
 
           return nil if magic != MAGIC_BYTES # wrong magic
-          return nil if len + 6 > data.size # partial package
+          return nil if length + HEADER_SIZE > bytes.size # partial package
 
-          klass = find_message_class(id)
+          if klass = find_message_class(id)
+            msg = klass.new
+            msg.extract bytes[HEADER_SIZE..-1]
 
-          msg = klass.new
-          msg.extract data[6..-1]
-
-          return msg
+            msg
+          end
         end
 
-        def self.message_size data
-          return 0 if data.size < 6
+        def self.message_size bytes
+          return 0 if bytes.size < HEADER_SIZE
 
-          magic, id, len = unpack_header(data)
+          magic, id, length = unpack_header(bytes)
 
-          return 0 if data.size < (len + 6)
+          return 0 if bytes.size < (length + HEADER_SIZE)
 
-          return len + 6
+          return length + HEADER_SIZE
         end
 
         private
 
-        def self.unpack_header data
-          data[0..5].unpack('SSS')
+        def self.unpack_header bytes
+          bytes[0...HEADER_SIZE].unpack('SSS')
         end
 
         def self.find_message_class id
-          [Hello, GetPeerList, PeerInfo].each do |msg|
-            return msg if msg::ID == id
+          [Hello, GetPeerList, PeerInfo].each do |message_class|
+            return message_class if message_class::ID == id
           end
 
-          return nil
+          nil
         end
       end
     end
