@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/elpassion/bitcourier.png)](https://travis-ci.org/elpassion/bitcourier)
 [![Dependency Status](https://gemnasium.com/elpassion/bitcourier.png)](https://gemnasium.com/elpassion/bitcourier)
+[![Gem Version](https://badge.fury.io/rb/bitcourier.png)](http://badge.fury.io/rb/bitcourier)
 
 Decentralized and trustless communication protocol used to anonymously send encrypted messages via peer-to-peer network.
 
