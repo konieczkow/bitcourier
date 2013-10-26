@@ -1,5 +1,5 @@
 require 'socket'
-module Elchat
+module Bitcourier
   module Network
     class Server
       DEFAULT_PORT = 6081

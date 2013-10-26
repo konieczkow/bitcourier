@@ -1,16 +1,16 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'elchat/version'
+require 'bitcourier/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'elchat'
-  spec.version       = Elchat::VERSION
+  spec.name          = 'bitcourier'
+  spec.version       = Bitcourier::VERSION
   spec.authors       = ['EL Passion']
   spec.email         = ['account@elpassion.com']
-  spec.description   = %q{Decentralized and trustless communication protocol used to anonymously send encrypted messages}
-  spec.summary       = %q{Decentralized and trustless communication protocol used to anonymously send encrypted messages}
-  spec.homepage      = 'https://github.com/elpassion/elchat'
+  spec.description   = %q{Decentralized and trustless communication protocol used to anonymously send encrypted messages via peer-to-peer network}
+  spec.summary       = %q{Decentralized and trustless communication protocol used to anonymously send encrypted messages via peer-to-peer network}
+  spec.homepage      = 'https://github.com/elpassion/bitcourier'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files`.split($/)

@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.dirname(__FILE__) + '/../lib'
+
+require 'thor'
+require 'bitcourier'
+
+class BitcourierCli < Thor
+
+  desc 'node', 'Start Bitcourier node'
+  method_option :port, default: 6081, aliases: '-p', desc: 'port on which the Bitcourier node will listen'
+  def node
+    daemon = Bitcourier::Daemon.new
+    daemon.run(options.port)
+  end
+
+end
+
+BitcourierCli.start

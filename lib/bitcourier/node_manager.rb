@@ -1,4 +1,4 @@
-module Elchat
+module Bitcourier
   class NodeManager
     MINIMUM_NODES = 3
 

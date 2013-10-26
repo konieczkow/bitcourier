@@ -1,4 +1,4 @@
-module Elchat
+module Bitcourier
   module Protocol
     module Message
       class Hello < Base

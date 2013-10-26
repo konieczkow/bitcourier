@@ -1,4 +1,4 @@
-module Elchat
+module Bitcourier
   class Node
 
     class State

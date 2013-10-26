@@ -1,3 +1,3 @@
-module Elchat
+module Bitcourier
   VERSION = '0.0.1'
 end

@@ -1,6 +1,6 @@
 require 'timeout'
 
-module Elchat
+module Bitcourier
   module Network
     class Client
       PEER_CONNECTION_RETRY_DELAY = 5 # In seconds

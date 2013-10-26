@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe Elchat::Protocol::Message::Hello do
+describe Bitcourier::Protocol::Message::Hello do
   before do
-    @hello       = Elchat::Protocol::Message::Hello.new
+    @hello       = Bitcourier::Protocol::Message::Hello.new
     @hello_bytes = "{\x00\x11\x00\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF".force_encoding('ASCII-8BIT')
   end
 
   it 'initiates with default version number' do
-    @hello.protocol_version.must_equal Elchat::Protocol::Message::Hello::PROTOCOL_VERSION
+    @hello.protocol_version.must_equal Bitcourier::Protocol::Message::Hello::PROTOCOL_VERSION
   end
 
   describe '#payload' do

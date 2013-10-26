@@ -10,7 +10,7 @@ end
 
 gem 'minitest' # ensure we are using the gem version
 
-require 'elchat'
+require 'bitcourier'
 require 'minitest/autorun'
 require 'simplecov'
 

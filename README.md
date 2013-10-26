@@ -1,7 +1,7 @@
-# Elchat
+# Bitcourier
 
-[![Build Status](https://travis-ci.org/elpassion/elchat.png)](https://travis-ci.org/elpassion/elchat)
-[![Dependency Status](https://gemnasium.com/elpassion/elchat.png)](https://gemnasium.com/elpassion/elchat)
+[![Build Status](https://travis-ci.org/elpassion/bitcourier.png)](https://travis-ci.org/elpassion/bitcourier)
+[![Dependency Status](https://gemnasium.com/elpassion/bitcourier.png)](https://gemnasium.com/elpassion/bitcourier)
 
 Decentralized and trustless communication protocol used to anonymously send encrypted messages via peer-to-peer network.
 
@@ -9,7 +9,7 @@ Decentralized and trustless communication protocol used to anonymously send encr
 
 Add this line to your application's Gemfile:
 
-    gem 'elchat'
+    gem 'bitcourier'
 
 And then execute:
 
@@ -17,13 +17,13 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install elchat
+    $ gem install bitcourier
 
 ## Usage
 
-Start Elchat node on port 6081 (this is the default port):
+Start Bitcourier node on port 6081 (this is the default port):
 
-    $ elchat node -p 6081
+    $ bitcourier node -p 6081
 
 ## Contributing
 
