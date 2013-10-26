@@ -8,7 +8,7 @@ module Elchat
         attr_accessor :ip, :port, :last_seen_at
 
         def payload
-          [*ip_array, port.to_i, last_seen_at.to_i].pack('CCCCSL')
+          [ip_array, port.to_i, last_seen_at.to_i].flatten.pack('CCCCSL')
         end
 
         def extract bytes
