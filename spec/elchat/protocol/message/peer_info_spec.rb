@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Elchat::Protocol::Message::PeerInfo do
   before do
     @peer_info       = Elchat::Protocol::Message::PeerInfo.new
-    @peer_info_bytes = "\x01\x02\x03\x04\xFF\xFF\xAF5\xA24".force_encoding(Encoding::BINARY)
+    @peer_info_bytes = "\x01\x02\x03\x04\xFF\xFF\xAF5\xA24".force_encoding('ASCII-8BIT')
   end
 
   describe '#payload' do
