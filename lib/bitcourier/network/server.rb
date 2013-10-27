@@ -1,4 +1,5 @@
 require 'socket'
+
 module Bitcourier
   module Network
     class Server
