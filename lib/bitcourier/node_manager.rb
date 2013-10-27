@@ -1,19 +1,20 @@
 module Bitcourier
   class NodeManager
-    DEFAULT_MINIMUM_NODES = 3
+    DEFAULT_TARGET_CONNECTIONS = 3
 
     attr_reader :context
-    attr_accessor :minimum_nodes
+
+    attr_accessor :target_connections
 
     def initialize(context, options = {})
-      @nodes   = []
       @context = context
+      @nodes   = []
 
-      self.minimum_nodes = options.fetch(:minimum_nodes, DEFAULT_MINIMUM_NODES)
+      self.target_connections = options.fetch(:target_connections, DEFAULT_TARGET_CONNECTIONS)
     end
 
     def needs_nodes?
-      nodes.count < minimum_nodes
+      nodes.count < target_connections
     end
 
     def add_socket socket, active = false

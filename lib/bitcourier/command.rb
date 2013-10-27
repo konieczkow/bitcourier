@@ -10,14 +10,17 @@ module Bitcourier
                   :default => Network::Server::DEFAULT_PORT,
                   :aliases => '-p',
                   :type    => :numeric
-    method_option :minimum_nodes,
-                  :desc    => 'minimum number of nodes to which Bitcourier will connect',
-                  :default => NodeManager::DEFAULT_MINIMUM_NODES,
-                  :aliases => '-n',
+    method_option :connections,
+                  :desc    => 'number of connections to other Bitcourier nodes',
+                  :default => NodeManager::DEFAULT_TARGET_CONNECTIONS,
+                  :aliases => '-c',
                   :type    => :numeric
 
     def node
-      Daemon.new.run :port => options.port
+      daemon = Daemon.new :port               => options.port,
+                          :target_connections => options.connections
+
+      daemon.run
     end
 
   end

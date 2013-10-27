@@ -5,17 +5,17 @@ module Bitcourier
     class Server
       DEFAULT_PORT = 6081
 
-      attr_accessor :port
+      attr_reader :port
 
-      def initialize context, port = DEFAULT_PORT
-        @port = port
+      def initialize(context, options = {})
         @context = context
+        @port    = options.fetch(:port, DEFAULT_PORT)
       end
 
       def run
-        @server = TCPServer.new @port
+        @server = TCPServer.new port
 
-        puts "Started server on port #{@port}"
+        puts "Started server on port #{port}"
 
         @thread = Thread.new do
           loop do
@@ -26,8 +26,8 @@ module Bitcourier
       end
 
       def ip_string
-
       end
+
     end
   end
 end
