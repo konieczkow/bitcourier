@@ -12,8 +12,7 @@ module Bitcourier
                   type:    :numeric
 
     def node
-      daemon = Daemon.new
-      daemon.run(options.port)
+      Daemon.new.run port: options.port
     end
 
   end

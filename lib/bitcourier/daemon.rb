@@ -13,7 +13,17 @@ module Bitcourier
       self.nonce        = SecureRandom.random_number(2**64)
     end
 
+    def run(options = {})
+      server.port = options.fetch(:port, Network::Server::DEFAULT_PORT)
+
+      start
+    end
+
+    private
+
     def start
+      Thread.abort_on_exception = true
+
       server_thread = server.run
       client_thread = client.run
 
@@ -21,13 +31,6 @@ module Bitcourier
       client_thread.join
     end
 
-    def run(port)
-      server.port = port
-
-      start
-    end
   end
 
 end
-
-Thread.abort_on_exception = true
