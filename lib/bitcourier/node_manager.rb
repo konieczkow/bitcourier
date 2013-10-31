@@ -1,6 +1,5 @@
 module Bitcourier
   class NodeManager
-    DEFAULT_TARGET_CONNECTIONS = 3
 
     attr_reader :context
 
@@ -10,7 +9,7 @@ module Bitcourier
       @context = context
       @nodes   = []
 
-      self.target_connections = options.fetch(:target_connections, DEFAULT_TARGET_CONNECTIONS)
+      self.target_connections = options.fetch(:target_connections, Bitcourier::CONFIG[:default_target_connections])
     end
 
     def needs_nodes?

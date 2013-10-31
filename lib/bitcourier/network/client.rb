@@ -3,10 +3,6 @@ require 'timeout'
 module Bitcourier
   module Network
     class Client
-      PEER_CONNECTION_RETRY_DELAY = 5 # In seconds
-      NEXT_PEER_DELAY             = 5
-      CONNECT_TIMEOUT             = 5
-
       def initialize context
         @context = context
       end
@@ -18,10 +14,10 @@ module Bitcourier
               if peer_connection = next_peer_connection
                 @context.node_manager.add_socket peer_connection, true
               else
-                sleep(NEXT_PEER_DELAY)
+                sleep(Bitcourier::CONFIG[:next_peer_delay])
               end
             else
-              sleep(NEXT_PEER_DELAY)
+              sleep(Bitcourier::CONFIG[:next_peer_delay])
             end
           end
         end
@@ -35,7 +31,7 @@ module Bitcourier
         if peer = @context.peer_list.next
           print "Connecting to #{peer.ip}:#{peer.port}... "
 
-          timeout(CONNECT_TIMEOUT) do
+          timeout(Bitcourier::CONFIG[:connect_timeout]) do
             socket = TCPSocket.new(peer.ip, peer.port)
           end
 
@@ -47,12 +43,12 @@ module Bitcourier
       rescue Errno::ECONNREFUSED
         print "Connection refused.\n"
 
-        peer.retry_in PEER_CONNECTION_RETRY_DELAY
+        peer.retry_in Bitcourier::CONFIG[:peer_connection_retry_delay]
         @context.peer_list.store(peer)
       rescue Errno::ETIMEDOUT, Timeout::Error
         print "Timed out.\n"
 
-        peer.retry_in PEER_CONNECTION_RETRY_DELAY
+        peer.retry_in Bitcourier::CONFIG[:peer_connection_retry_delay]
         @context.peer_list.store(peer)
       rescue Exception => e
         print "#{e.class}: #{e}\n"
