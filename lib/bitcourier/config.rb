@@ -22,23 +22,25 @@ module Bitcourier
 
     def initialize
       @config = DEFAULT_CONFIG
-      load_config_from_file
-      configure(@config)
+      config_from_file = load_config_from_file
+      configure config_from_file if config_from_file
     end
 
     private
     def load_config_from_file
       begin
-        @config = YAML::load(IO.read(CONFIG_FILE_PATH))
+        YAML::load(IO.read(File.expand_path(CONFIG_FILE_PATH)))
       rescue Errno::ENOENT
-        puts("YAML configuration file couldn't be found. Using defaults."); return
+        puts("YAML configuration file couldn't be found (#{CONFIG_FILE_PATH}). Using defaults."); return
       rescue Psych::SyntaxError
         puts("YAML configuration file contains invalid syntax. Using defaults."); return
       end
     end
 
     def configure(opts = {})
-      opts.each { |key, value| @config[key.to_sym] = value if VALID_CONFIG_KEYS.include? key.to_sym }
+      opts.each do |key, value|
+        @config[key.to_sym] = value if VALID_CONFIG_KEYS.include? key.to_sym
+      end
     end
 
   end
