@@ -28,13 +28,11 @@ module Bitcourier
 
     private
     def load_config_from_file
-      begin
-        YAML::load(IO.read(File.expand_path(CONFIG_FILE_PATH)))
-      rescue Errno::ENOENT
-        puts("YAML configuration file couldn't be found (#{CONFIG_FILE_PATH}). Using defaults."); return
-      rescue Psych::SyntaxError
-        puts("YAML configuration file contains invalid syntax. Using defaults."); return
-      end
+      YAML::load(IO.read(File.expand_path(CONFIG_FILE_PATH)))
+    rescue Errno::ENOENT
+      puts("YAML configuration file couldn't be found (#{CONFIG_FILE_PATH}). Using defaults."); return
+    rescue Psych::SyntaxError
+      puts("YAML configuration file contains invalid syntax. Using defaults."); return
     end
 
     def configure(opts = {})
