@@ -42,18 +42,17 @@ module Bitcourier
     end
 
     def seed
-      store Peer.new('146.185.167.10', 6081)
+      store Peer.new(Bitcourier::CONFIG[:peer_seed], Bitcourier::CONFIG[:default_port])
     end
 
     class Storage
-      PATH = './tmp/peer_list.txt'
-      
+
       def initialize list
         @list = list
       end
 
       def read
-        File.read(PATH).lines.map do |line|
+        File.read(Bitcourier::CONFIG[:peer_list_path]).lines.map do |line|
           @list.store Peer.from_a(line.split('|'))
         end
       rescue Errno::ENOENT
@@ -61,7 +60,7 @@ module Bitcourier
       end
 
       def write
-        File.open(PATH, 'w') do |file|
+        File.open(Bitcourier::CONFIG[:peer_list_path], 'w') do |file|
           @list.peers.each do |peer|
             file.puts peer.to_a.join('|')
           end

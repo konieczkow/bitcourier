@@ -3,13 +3,12 @@ require 'socket'
 module Bitcourier
   module Network
     class Server
-      DEFAULT_PORT = 6081
 
       attr_reader :port
 
       def initialize(context, options = {})
         @context = context
-        @port    = options.fetch(:port, DEFAULT_PORT)
+        @port    = options.fetch(:port, Bitcourier::CONFIG[:default_port])
       end
 
       def run

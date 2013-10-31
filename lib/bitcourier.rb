@@ -1,3 +1,4 @@
+require 'bitcourier/config'
 require 'bitcourier/protocol'
 require 'bitcourier/network'
 require 'bitcourier/node'
@@ -9,3 +10,5 @@ require 'bitcourier/version'
 
 module Bitcourier
 end
+
+Bitcourier::CONFIG = Bitcourier::Config.new.config
