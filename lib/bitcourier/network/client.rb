@@ -25,6 +25,11 @@ module Bitcourier
 
       private
 
+      def fail_peer peer
+        peer.retry_in Bitcourier::CONFIG[:peer_connection_retry_delay]
+        @context.peer_list.store(peer)
+      end
+
       def next_peer_connection
         socket = nil
 
@@ -37,19 +42,24 @@ module Bitcourier
 
           print "Connected.\n"
 
+          # TODO: Discuss: We should touch peer only after successful handshake,
+          # otherwise we might end up having invalid peers at the top of our peer list.
           peer.touch
+
           @context.peer_list.store(peer)
         end
       rescue Errno::ECONNREFUSED
         print "Connection refused.\n"
 
-        peer.retry_in Bitcourier::CONFIG[:peer_connection_retry_delay]
-        @context.peer_list.store(peer)
+        fail_peer(peer)
       rescue Errno::ETIMEDOUT, Timeout::Error
         print "Timed out.\n"
 
-        peer.retry_in Bitcourier::CONFIG[:peer_connection_retry_delay]
-        @context.peer_list.store(peer)
+        fail_peer(peer)
+      rescue Errno::EHOSTUNREACH
+        print "Host unreachable.\n"
+
+        fail_peer(peer)
       rescue Exception => e
         print "#{e.class}: #{e}\n"
         puts e.backtrace
