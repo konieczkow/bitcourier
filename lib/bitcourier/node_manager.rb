@@ -30,6 +30,12 @@ module Bitcourier
       node.run
     end
 
+    def to_peer_list
+      nodes.map do |node|
+        node.to_peer
+      end
+    end
+
     private
 
     attr_reader :nodes

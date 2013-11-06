@@ -19,8 +19,12 @@ module Bitcourier
       save
     end
 
-    def next
-      peers.select(&:can_connect?).sample
+    def next options = {}
+      pool = peers.select(&:can_connect?)
+      
+      # TODO: filter out peers from options[:except]
+
+      pool.sample
     end
 
     private

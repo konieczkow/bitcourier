@@ -93,10 +93,13 @@ module Bitcourier
       socket.close
     end
 
-    def remember_peer
+    def to_peer
       remote_ip = socket.peeraddr[3]
-      peer      = Peer.new remote_ip, remote_port
+      Peer.new remote_ip, remote_port
+    end
 
+    def remember_peer
+      peer = to_peer
       context.peer_list.store peer
     end
 

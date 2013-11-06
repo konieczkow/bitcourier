@@ -36,7 +36,11 @@ module Bitcourier
     end
 
     def same?(other)
-      other && (ip == other.ip) && (port == other.port)
+      equals?(other)
+    end
+
+    def equals?(peer)
+      peer.is_a?(Peer) && (ip == peer.ip) && (port == peer.port)
     end
 
     def self.from_a a
