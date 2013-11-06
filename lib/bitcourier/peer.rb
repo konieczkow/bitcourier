@@ -1,10 +1,9 @@
 module Bitcourier
   class Peer
-    attr_accessor :ip, :port, :last_seen_at, :next_connection_at
+    attr_accessor :address, :last_seen_at, :next_connection_at
 
     def initialize ip, port, last_seen_at = nil, next_connection_at = Time.now.utc
-      self.ip                 = ip
-      self.port               = port
+      self.address = Address.new(ip, port)
       self.last_seen_at       = last_seen_at
       self.next_connection_at = next_connection_at
     end
@@ -28,19 +27,26 @@ module Bitcourier
 
     def to_a
       [
-          ip,
-          port,
+          address.to_a,
           last_seen_at && last_seen_at.to_i,
           next_connection_at && next_connection_at.to_i
-      ]
+      ].flatten
     end
 
     def same?(other)
       equals?(other)
     end
 
+    def ip
+      address.ip
+    end
+
+    def port
+      address.port
+    end
+
     def equals?(peer)
-      peer.is_a?(Peer) && (ip == peer.ip) && (port == peer.port)
+      peer.is_a?(Peer) && peer.address.equals?(address)
     end
 
     def self.from_a a

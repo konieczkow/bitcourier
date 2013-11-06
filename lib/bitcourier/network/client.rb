@@ -33,7 +33,9 @@ module Bitcourier
       def next_peer_connection
         socket = nil
 
-        if peer = @context.peer_list.next
+        connected = @context.node_manager.to_address_array
+
+        if peer = @context.peer_list.next(except: connected)
           print "Connecting to #{peer.ip}:#{peer.port}... "
 
           timeout(Bitcourier::CONFIG[:connect_timeout]) do

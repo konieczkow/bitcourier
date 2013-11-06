@@ -30,10 +30,14 @@ module Bitcourier
       node.run
     end
 
-    def to_peer_list
-      nodes.map do |node|
-        node.to_peer
+    def to_address_array
+      a = AddressArray.new
+
+      nodes.each do |node|
+        a << node.to_addr
       end
+
+      return a
     end
 
     private

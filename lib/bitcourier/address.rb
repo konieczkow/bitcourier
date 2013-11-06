@@ -14,5 +14,9 @@ module Bitcourier
     def to_s
       "#{ip}:#{port}"
     end
+
+    def to_a
+      [ip, port]
+    end
   end
 end

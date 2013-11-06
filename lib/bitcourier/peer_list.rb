@@ -22,7 +22,13 @@ module Bitcourier
     def next options = {}
       pool = peers.select(&:can_connect?)
       
-      # TODO: filter out peers from options[:except]
+      if options[:except]
+        except = options[:except]
+
+        pool.delete_if do |p|
+          except.include?(p.address)
+        end
+      end
 
       pool.sample
     end

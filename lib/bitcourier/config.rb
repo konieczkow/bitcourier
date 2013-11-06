@@ -7,8 +7,8 @@ module Bitcourier
     CONFIG_FILE_PATH = "~/.bitcourier/config.yml"
 
     DEFAULT_CONFIG = {
-        peer_connection_retry_delay: 5,
-        next_peer_delay: 5,
+        peer_connection_retry_delay: 60,
+        next_peer_delay: 1,
         connect_timeout: 5,
         default_target_connections: 3,
         default_port: 6081,

@@ -98,6 +98,11 @@ module Bitcourier
       Peer.new remote_ip, remote_port
     end
 
+    def to_addr
+      remote_ip = socket.peeraddr[3]
+      Address.new remote_ip, remote_port
+    end
+
     def remember_peer
       peer = to_peer
       context.peer_list.store peer
