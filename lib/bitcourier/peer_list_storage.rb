@@ -2,9 +2,7 @@ module Bitcourier
   class PeerListStorage
 
     def initialize(peer_list)
-      raise ArgumentError, 'peer_list must be present' unless peer_list
-
-      @peer_list = peer_list
+      @peer_list = peer_list || raise(ArgumentError, 'peer_list must be present')
     end
 
     def read

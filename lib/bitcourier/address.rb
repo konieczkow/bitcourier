@@ -3,8 +3,8 @@ module Bitcourier
     attr_reader :ip, :port
 
     def initialize(ip, port)
-      @ip   = ip
-      @port = port
+      @ip   = ip   || raise(ArgumentError, 'IP must be present')
+      @port = port || raise(ArgumentError, 'port must be present')
     end
 
     def ==(other)
