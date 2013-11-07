@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Bitcourier::Protocol::Message::PeerInfo do
   before do
     @peer_info       = Bitcourier::Protocol::Message::PeerInfo.new
-    @peer_info_bytes = "\x01\x02\x03\x04\xFF\xFF\xAF5\xA24".force_encoding('ASCII-8BIT')
+    @peer_info_bytes = "\x01\x02\x03\x04\xFF\xFF\xAF5\xA24".force_encoding(Encoding::BINARY)
   end
 
   describe '#payload' do

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Bitcourier::Protocol::Message::Hello do
   before do
     @hello       = Bitcourier::Protocol::Message::Hello.new
-    @hello_bytes = "{\x00\x11\x00\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF".force_encoding('ASCII-8BIT')
+    @hello_bytes = "{\x00\x11\x00\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF".force_encoding(Encoding::BINARY)
   end
 
   it 'initiates with default version number' do
