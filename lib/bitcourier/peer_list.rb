@@ -45,6 +45,9 @@ module Bitcourier
     def load
       storage.read
 
+      puts "LOADED:"
+      puts peers
+
       seed if peers.size == 0
     end
 

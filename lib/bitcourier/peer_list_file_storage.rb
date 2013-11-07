@@ -4,7 +4,7 @@ module Bitcourier
     def read
       peer_list.peers.clear
 
-      File.read(Bitcourier::CONFIG[:peer_list_path]).lines.map do |line|
+      IO.foreach(Bitcourier::CONFIG[:peer_list_path]) do |line|
         peer_list.peers << Peer.from_a(line.split('|'))
       end
     rescue Errno::ENOENT
