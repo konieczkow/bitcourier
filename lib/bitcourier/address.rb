@@ -1,14 +1,14 @@
 module Bitcourier
   class Address
-    attr_accessor :ip, :port
+    attr_reader :ip, :port
 
-    def initialize ip, port = 6081
-      self.ip = ip
-      self.port = port
+    def initialize(ip, port)
+      @ip   = ip
+      @port = port
     end
 
-    def equals?(address)
-      address.is_a?(Address) and (address.ip == self.ip) and (address.port == self.port)
+    def ==(other)
+      equal?(other) || (other.instance_of?(self.class) && (other.ip == ip) && (other.port == port))
     end
 
     def to_s
@@ -18,5 +18,6 @@ module Bitcourier
     def to_a
       [ip, port]
     end
+
   end
 end

@@ -31,13 +31,7 @@ module Bitcourier
     end
 
     def to_address_array
-      a = AddressArray.new
-
-      nodes.each do |node|
-        a << node.to_addr
-      end
-
-      return a
+      nodes.map(&:to_addr)
     end
 
     private

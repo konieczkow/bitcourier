@@ -38,7 +38,7 @@ module Bitcourier
     attr_reader :storage
 
     def find(peer)
-      peers.detect { |existing| existing.same?(peer) }
+      peers.detect { |existing| existing == peer }
     end
 
     def save

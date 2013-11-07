@@ -1,11 +1,18 @@
 module Bitcourier
   class Peer
-    attr_accessor :address, :last_seen_at, :next_connection_at
+    attr_accessor :last_seen_at, :next_connection_at
 
-    def initialize ip, port, last_seen_at = nil, next_connection_at = Time.now.utc
-      self.address = Address.new(ip, port)
+    attr_reader :address
+
+    def initialize(ip, port, last_seen_at = nil, next_connection_at = Time.now.utc)
+      @address = Address.new(ip, port)
+
       self.last_seen_at       = last_seen_at
       self.next_connection_at = next_connection_at
+    end
+
+    def ==(other)
+      equal?(other) || (other.instance_of?(self.class) && (other.address == address))
     end
 
     def touch(timestamp = Time.now.utc)
@@ -33,20 +40,12 @@ module Bitcourier
       ].flatten
     end
 
-    def same?(other)
-      equals?(other)
-    end
-
     def ip
       address.ip
     end
 
     def port
       address.port
-    end
-
-    def equals?(peer)
-      peer.is_a?(Peer) && peer.address.equals?(address)
     end
 
     def self.from_a a
