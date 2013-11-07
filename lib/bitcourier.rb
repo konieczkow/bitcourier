@@ -7,6 +7,8 @@ require 'bitcourier/node_manager'
 require 'bitcourier/daemon'
 require 'bitcourier/peer'
 require 'bitcourier/peer_list'
+require 'bitcourier/peer_list_storage'
+require 'bitcourier/peer_list_file_storage'
 require 'bitcourier/version'
 
 module Bitcourier
