@@ -4,6 +4,10 @@ module Bitcourier
 
     attr_reader :address
 
+    def self.from_a array
+      new(array[0], array[1].to_i, array[2] && Time.at(array[2].to_i).utc, array[3] && Time.at(array[3].to_i).utc)
+    end
+
     def initialize(ip, port, last_seen_at = nil, next_connection_at = Time.now.utc)
       @address = Address.new(ip, port)
 
@@ -21,23 +25,16 @@ module Bitcourier
 
     def update(peer)
       touch(peer.last_seen_at)
+
       self.next_connection_at = peer.next_connection_at
     end
 
     def can_connect?(time = Time.now.utc)
-      next_connection_at < time
+      next_connection_at <= time
     end
 
-    def retry_in delay
-      self.next_connection_at = Time.now + delay
-    end
-
-    def to_a
-      [
-          address.to_a,
-          last_seen_at && last_seen_at.to_i,
-          next_connection_at && next_connection_at.to_i
-      ].flatten
+    def retry_in(seconds)
+      self.next_connection_at = Time.now.utc + seconds
     end
 
     def ip
@@ -48,8 +45,13 @@ module Bitcourier
       address.port
     end
 
-    def self.from_a a
-      new(a[0], a[1].to_i, a[2] && Time.at(a[2].to_i).utc, a[3] && Time.at(a[3].to_i).utc)
+    def to_a
+      [
+          *address.to_a,
+          last_seen_at && last_seen_at.to_i,
+          next_connection_at && next_connection_at.to_i
+      ]
     end
+
   end
 end

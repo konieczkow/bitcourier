@@ -24,4 +24,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'minitest', '>= 5.0.8'
   spec.add_development_dependency 'rake'
   spec.add_development_dependency 'simplecov', '>= 0.7.1'
+  spec.add_development_dependency 'timecop', '~> 0.6.3'
 end
