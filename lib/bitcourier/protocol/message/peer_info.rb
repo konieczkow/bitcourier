@@ -8,10 +8,10 @@ module Bitcourier
         attr_accessor :ip, :port, :last_seen_at
 
         def payload
-          [ip_array, port.to_i, last_seen_at.to_i].flatten.pack('CCCCSL')
+          [*ip_array, port.to_i, last_seen_at.to_i].pack('CCCCSL')
         end
 
-        def extract bytes
+        def extract(bytes)
           data = bytes.unpack('CCCCSL')
 
           self.ip           = data[0..3].join('.')
